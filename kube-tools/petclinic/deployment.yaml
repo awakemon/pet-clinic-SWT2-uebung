@@ -1,19 +1,19 @@
 ### Hier wird der Namespace der Anwendung erstellt
 apiVersion: v1
-kind:
+kind: Namespace
 metadata:
-  name:
+  name: petclinic
 
 ---
 ### Hier wird das Deployment der Anwendung erstellt
 apiVersion: apps/v1
-kind:
+kind: Deployment
 metadata:
   name: petclinic-deployment
-  namespace:
+  namespace: petclinic
 spec:
   ### Hier wird spezifiert, wie viele Replikate der Anwendung erstellt werden sollen
-  replicas:
+  replicas: 1
   selector:
     matchLabels:
       app: petclinic
@@ -24,19 +24,39 @@ spec:
     spec:
       containers:
         ### Hier wird spezifiert, wie der Container heißen soll und welches Image verwendet wird
-        -
+        - name: petclinic
+          image: ghcr.io/awakemon/pet-clinic-swt2-uebung:latest # <--- ggf. anpassen
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          # Optional: Health-Probes, falls verfügbar
+          # readinessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 30
 
 ---
 ### Hier wird der Service der Anwendung erstellt
 apiVersion: v1
-kind:
+kind: Service
 metadata:
   name: petclinic-service
-  namespace:
+  namespace: petclinic
 spec:
   type: NodePort
   selector:
     app: petclinic
   ports:
     ### Hier werden die Ports der Anwendung definiert. Es müssen port, targetport und nodeport definiert werden.
-    -
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30001
