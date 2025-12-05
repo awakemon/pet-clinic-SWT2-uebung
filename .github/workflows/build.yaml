@@ -21,7 +21,7 @@ jobs:
         run: |
           #### AUFGABE COMPILE, DOCKER BUILD UND PUSH
           mvn package 
-          docker login --username awakemon --password TOKEN ghcr.io
+          docker login --username awakemon --password ${{ secrets.TOKEN }} ghcr.io
           docker build -t ghcr.io/awakemon/pet-clinic-swt2-uebung:latest -f Dockerfile .
           docker push ghcr.io/awakemon/pet-clinic-swt2-uebung:latest
             
