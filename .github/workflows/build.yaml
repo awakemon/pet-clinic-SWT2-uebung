@@ -20,4 +20,8 @@ jobs:
       - name: Compile, build and push
         run: |
           #### AUFGABE COMPILE, DOCKER BUILD UND PUSH
-            # hier ist Platz für maven package und docker build
+          mvn package 
+          docker login --username awakemon --password TOKEN ghcr.io
+          docker build -t ghcr.io/awakemon/pet-clinic-swt2-uebung:latest -f Dockerfile .
+          docker push ghcr.io/awakemon/pet-clinic-swt2-uebung:latest
+            
